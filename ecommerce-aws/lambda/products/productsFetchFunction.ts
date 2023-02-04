@@ -2,6 +2,8 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from 'aws-lambda
 
 async function handler(event: APIGatewayProxyEvent, context: Context): Promise<APIGatewayProxyResult> {
   const { httpMethod } = event;
+  const lambdaRequestId = context.awsRequestId;
+  const apiRequestId = event.requestContext.requestId;
 
   if (event.resource === 'products') {
     if (httpMethod === 'GET') {
