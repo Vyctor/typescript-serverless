@@ -11,7 +11,9 @@
     "cdk": "cdk",
     "lint": "eslint . --ext js,ts --cache --fix",
     "prettier": "prettier --list-different './**/*.{js,ts}'",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "deploy": "cdk deploy --all",
+    "destroy": "cdk destroy --all"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.110",

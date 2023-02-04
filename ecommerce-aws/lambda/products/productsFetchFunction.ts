@@ -8,9 +8,11 @@ async function handler(event: APIGatewayProxyEvent, context: Context): Promise<A
   console.info(`
     API Gateway Request ID: ${apiRequestId}
     Lambda Request ID: ${lambdaRequestId}
+    Event ResourceÇ ${event.resource}
+    HTTP Method: ${httpMethod}
   `);
 
-  if (event.resource === 'products') {
+  if (event.resource === '/products') {
     if (httpMethod === 'GET') {
       console.info('GET');
       return {
