@@ -5,9 +5,14 @@ async function handler(event: APIGatewayProxyEvent, context: Context): Promise<A
   const lambdaRequestId = context.awsRequestId;
   const apiRequestId = event.requestContext.requestId;
 
+  console.info(`
+    API Gateway Request ID: ${apiRequestId}
+    Lambda Request ID: ${lambdaRequestId}
+  `);
+
   if (event.resource === 'products') {
     if (httpMethod === 'GET') {
-      console.log('GET');
+      console.info('GET');
       return {
         statusCode: 200,
         body: JSON.stringify({
