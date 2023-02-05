@@ -36,5 +36,7 @@ export class ProductsAppStack extends cdk.Stack {
         PRODUCTS_TABLE_NAME: this.productsDynamoDb.tableName,
       },
     });
+
+    this.productsDynamoDb.grantReadData(this.productsFetchHandler);
   }
 }
