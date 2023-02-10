@@ -26,7 +26,7 @@ async function handler(event: APIGatewayProxyEvent, context: Context): Promise<A
   if (event.resource === '/products/{id}') {
     const productId = event.pathParameters?.id as string;
 
-    if (httpMethod === 'GET') {
+    if (httpMethod === 'PUT') {
       return {
         statusCode: 201,
         body: JSON.stringify({

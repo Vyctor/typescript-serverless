@@ -12,7 +12,7 @@
     "lint": "eslint . --ext js,ts --cache --fix",
     "prettier": "prettier --list-different './**/*.{js,ts}'",
     "typecheck": "tsc --noEmit",
-    "deploy": "cdk deploy --all",
+    "deploy": "cdk deploy --all --require-approval never",
     "destroy": "cdk destroy --all"
   },
   "devDependencies": {
