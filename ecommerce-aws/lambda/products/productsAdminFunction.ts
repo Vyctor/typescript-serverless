@@ -13,12 +13,11 @@ async function handler(event: APIGatewayProxyEvent, context: Context): Promise<A
   `);
 
   if (event.resource === '/products') {
-    if (httpMethod === 'GET') {
-      console.info('GET');
+    if (httpMethod === 'POST') {
       return {
-        statusCode: 200,
+        statusCode: 201,
         body: JSON.stringify({
-          message: 'GET Products - OK',
+          message: 'POST /products - OK',
         }),
       };
     }
@@ -28,11 +27,19 @@ async function handler(event: APIGatewayProxyEvent, context: Context): Promise<A
     const productId = event.pathParameters?.id as string;
 
     if (httpMethod === 'GET') {
-      console.info('GET');
+      return {
+        statusCode: 201,
+        body: JSON.stringify({
+          message: `GET /products/${productId}`,
+        }),
+      };
+    }
+
+    if (httpMethod === 'DELETE') {
       return {
         statusCode: 200,
         body: JSON.stringify({
-          message: `GET /products/${productId}`,
+          message: `DELETE /products/${productId}`,
         }),
       };
     }
