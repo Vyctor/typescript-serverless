@@ -57,7 +57,7 @@ export class ProductRepository {
     return params.Item as Product;
   }
 
-  async delete(id: string): Promise<void> {
+  async delete(id: string): Promise<Product> {
     const params = {
       TableName: this.tableName,
       Key: {
@@ -71,6 +71,8 @@ export class ProductRepository {
     if (!data.Attributes) {
       throw new Error(`Product not found`);
     }
+
+    return data.Attributes as Product;
   }
 
   async update(id: string, product: Product): Promise<void> {

@@ -1,4 +1,10 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from 'aws-lambda';
+import { DynamoDB } from 'aws-sdk';
+import { Product, ProductRepository } from '/opt/nodejs/productsLayer';
+
+const productsDynamoDbTableName = process.env.PRODUCTS_DYNAMODB as string;
+const dynamoDbClient = new DynamoDB.DocumentClient();
+const productRepository = new ProductRepository(dynamoDbClient, productsDynamoDbTableName);
 
 async function handler(event: APIGatewayProxyEvent, context: Context): Promise<APIGatewayProxyResult> {
   const { httpMethod } = event;
@@ -13,12 +19,14 @@ async function handler(event: APIGatewayProxyEvent, context: Context): Promise<A
   `);
 
   if (event.resource === '/products') {
+    const product: Product = JSON.parse(event.body as string);
+
+    const productCreated = await productRepository.create(product);
+
     if (httpMethod === 'POST') {
       return {
         statusCode: 201,
-        body: JSON.stringify({
-          message: 'POST /products - OK',
-        }),
+        body: JSON.stringify(productCreated),
       };
     }
   }
@@ -26,20 +34,34 @@ async function handler(event: APIGatewayProxyEvent, context: Context): Promise<A
   if (event.resource === '/products/{id}') {
     const productId = event.pathParameters?.id as string;
 
-    if (httpMethod === 'PUT') {
-      return {
-        statusCode: 201,
-        body: JSON.stringify({
-          message: `GET /products/${productId}`,
-        }),
-      };
-    }
+    try {
+      if (httpMethod === 'PUT') {
+        const product: Product = JSON.parse(event.body as string);
 
-    if (httpMethod === 'DELETE') {
+        const productUpdated = await productRepository.update(productId, product);
+
+        return {
+          statusCode: 201,
+          body: JSON.stringify(productUpdated),
+        };
+      }
+
+      if (httpMethod === 'DELETE') {
+        const product = await productRepository.delete(productId);
+
+        return {
+          statusCode: 200,
+          body: JSON.stringify(product),
+        };
+      }
+    } catch (error) {
+      const errorMessage = (<Error>error).message;
+      console.error(errorMessage);
+
       return {
-        statusCode: 200,
+        statusCode: 404,
         body: JSON.stringify({
-          message: `DELETE /products/${productId}`,
+          message: errorMessage,
         }),
       };
     }
