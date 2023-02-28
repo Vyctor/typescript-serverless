@@ -56,4 +56,20 @@ export class ProductRepository {
 
     return params.Item as Product;
   }
+
+  async deleteProduct(id: string): Promise<void> {
+    const params = {
+      TableName: this.tableName,
+      Key: {
+        id,
+      },
+      ReturnValues: 'ALL_OLD',
+    };
+
+    const data = await this.dynamoDbClient.delete(params).promise();
+
+    if (!data.Attributes) {
+      throw new Error(`Product not found`);
+    }
+  }
 }
