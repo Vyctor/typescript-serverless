@@ -18,7 +18,7 @@ export class ProductRepository {
     this.tableName = tableName;
   }
 
-  async getAllProducts(): Promise<Array<Product>> {
+  async getAll(): Promise<Array<Product>> {
     const params = {
       TableName: this.tableName,
     };
@@ -28,7 +28,7 @@ export class ProductRepository {
     return result.Items as Product[];
   }
 
-  async getProductById(id: string): Promise<Product> {
+  async getById(id: string): Promise<Product> {
     const params = {
       TableName: this.tableName,
       Key: {
@@ -45,7 +45,7 @@ export class ProductRepository {
     return result.Item as Product;
   }
 
-  async createProduct(product: Product): Promise<Product> {
+  async create(product: Product): Promise<Product> {
     product.id = uuid();
     const params = {
       TableName: this.tableName,
@@ -57,7 +57,7 @@ export class ProductRepository {
     return params.Item as Product;
   }
 
-  async deleteProduct(id: string): Promise<void> {
+  async delete(id: string): Promise<void> {
     const params = {
       TableName: this.tableName,
       Key: {
@@ -69,6 +69,30 @@ export class ProductRepository {
     const data = await this.dynamoDbClient.delete(params).promise();
 
     if (!data.Attributes) {
+      throw new Error(`Product not found`);
+    }
+  }
+
+  async update(id: string, product: Product): Promise<void> {
+    const params = {
+      TableName: this.tableName,
+      Key: {
+        id,
+      },
+      ConditionExpression: 'attribute_exists(id)',
+      ReturnValues: 'UPDATED_NEW',
+      UpdateExpression: 'set productName = :productName, code = :code, price = :price, model = :model',
+      ExpressionAttributeValues: {
+        ':productName': product.productName,
+        ':code': product.code,
+        ':price': product.price,
+        ':model': product.model,
+      },
+    };
+
+    const result = await this.dynamoDbClient.update(params).promise();
+
+    if (!result.Attributes?.id) {
       throw new Error(`Product not found`);
     }
   }
