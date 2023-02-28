@@ -43,6 +43,7 @@ export class ProductsAppStack extends cdk.Stack {
         PRODUCTS_TABLE_NAME: this.productsDynamoDb.tableName,
       },
       layers: [productsLayer],
+      tracing: lambda.Tracing.ACTIVE,
     });
 
     this.productsDynamoDb.grantReadData(this.productsFetchHandler);
@@ -61,6 +62,7 @@ export class ProductsAppStack extends cdk.Stack {
         PRODUCTS_TABLE_NAME: this.productsDynamoDb.tableName,
       },
       layers: [productsLayer],
+      tracing: lambda.Tracing.ACTIVE,
     });
 
     this.productsDynamoDb.grantWriteData(this.productsAdminHandler);
