@@ -17,4 +17,14 @@ export class ProductRepository {
     this.dynamoDbClient = dynamoDbClient;
     this.tableName = tableName;
   }
+
+  async getAllProducts(): Promise<Array<Product>> {
+    const params = {
+      TableName: this.tableName,
+    };
+
+    const result = await this.dynamoDbClient.scan(params).promise();
+
+    return result.Items as Product[];
+  }
 }
