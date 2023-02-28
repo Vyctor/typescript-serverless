@@ -41,7 +41,7 @@ async function handler(event: APIGatewayProxyEvent, context: Context): Promise<A
         const productUpdated = await productRepository.update(productId, product);
 
         return {
-          statusCode: 201,
+          statusCode: 200,
           body: JSON.stringify(productUpdated),
         };
       }
